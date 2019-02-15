@@ -83,12 +83,12 @@ exports.Login = (req, res) => {
 
     id = req.body.id
     pwd = req.body.password
-    user.findOne({"id":id}, (err, data) => {
+    user.findOne({ "id": id }, (err, data) => {
         if (err) {
             res.send(err).status(400)
         }
         else {
-            const token = jwt.sign({ data: data }, pwd, { expiresIn: 60})
+            const token = jwt.sign({ data: data }, pwd, { expiresIn: 60 })
             console.log(time.Date())
             res.send(token).status(200)
         }

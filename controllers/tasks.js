@@ -14,8 +14,8 @@ exports.AddTask = (req, res) => {
             var taskData = new tasks({
                 "name": req.body.name,
                 "addedby": decoded.data.id,
-                "startdate": req.body.startdate,
-                "enddate": req.body.enddate,
+                "startdate": Date.parse(req.body.startdate),
+                "enddate": Date.parse(req.body.enddate),
                 "assignedto": req.body.assignedto
             })
             console.log(taskData)
@@ -23,11 +23,11 @@ exports.AddTask = (req, res) => {
                 if (err) {
                     res.send(err).status(400)
                 }
-                else{
+                else {
                     res.send("task added").status(200)
                 }
-            
-        })
-    }
-})
+
+            })
+        }
+    })
 }
