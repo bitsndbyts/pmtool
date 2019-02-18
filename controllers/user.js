@@ -2,6 +2,9 @@ const user = require('../models/user')
 const mail = require('../helpers/mail')
 const jwt = require('jsonwebtoken')
 const time = require('time')
+var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 exports.CreateAccount = (req, res) => {
     if (!req.body.email || !mail.validateEmail(req.body.email)) {
@@ -88,15 +91,21 @@ exports.Login = (req, res) => {
             res.send(err).status(400)
         }
         else {
-            const token = jwt.sign({ data: data }, pwd, { expiresIn: 60 })
+            const token = jwt.sign({ data: data }, pwd, { expiresIn: 60*60 })
             console.log(time.Date())
+            io.on('connection', function (socket) {
+                io.on(id,function(val){
+                    console.log(id+"socket"+val)
+                })
+            });
+               
             res.send(token).status(200)
         }
     })
 }
 
 exports.update = (req, res) => {
-    user.update({ "Uid": req.body.Uid }, { $set: req.body }, (err, data) => {
+    user.update({ "id": req.body.id }, { $set: req.body }, (err, data) => {
         if (err) {
             res.status(400).send(err)
         }
@@ -107,7 +116,7 @@ exports.update = (req, res) => {
 }
 
 exports.delete = (req, res) => {
-    user.remove({ "Uid": req.body.Uid }, (err, data) => {
+    user.remove({ "id": req.body.id }, (err, data) => {
         if (err) {
             res.send(err).status(400)
         }
