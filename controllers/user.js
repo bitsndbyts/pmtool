@@ -27,8 +27,6 @@ exports.CreateAccount = (req, res) => {
     var insertData = new user({
         "name": req.body.name,
         "id": req.body.id,
-        "firstname": req.body.firstname,
-        "lastname": req.body.lastname,
         "email": req.body.email,
         "password": req.body.password,
         "jobTitle": req.body.jobTitle,
