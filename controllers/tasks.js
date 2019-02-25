@@ -1,7 +1,8 @@
 const express = require('express')
 const tasks = require('../models/tasks')
 const jwt = require('jsonwebtoken')
-const io = require('../app').server
+const EventEmitter = require("events").EventEmitter;
+var ee = new EventEmitter();
 
 exports.AddTask = (req, res) => {
     token = req.headers['token']
@@ -24,14 +25,18 @@ exports.AddTask = (req, res) => {
                     res.send(err).status(400)
                 }
                 else {
+                    ee.addListener("First event", function (data) {
+                        console.log("first listener")
+                    })
                     for (let i = 0; i < req.body.assignedto.length; i++) {
-                        io.emit(i)                    }
-                    
+                        ee.emit(req.body.assignedto[i])
+                    }
                     res.send("task added").status(200)
-
                 }
 
             })
         }
     })
 }
+
+module.exports.emitter = ee

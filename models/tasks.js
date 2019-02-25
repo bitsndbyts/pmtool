@@ -12,7 +12,7 @@ const TaskDetails = new mongoose.Schema({
         required: true,
     },
     assignedto: {
-        type: [String],
+        type: Array,
         required: true,
     },
     startdate: {
