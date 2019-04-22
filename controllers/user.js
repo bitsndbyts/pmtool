@@ -5,6 +5,7 @@ const time = require('time')
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var async = require('async');
 
 exports.CreateAccount = (req, res) => {
     if (!req.body.email || !mail.validateEmail(req.body.email)) {
@@ -68,18 +69,29 @@ exports.Activate = (req, res) => {
             res.send(err).status(400)
         }
         else {
-            user.updateOne({ "id": params.id }, { $set: { "status": "ACTIVE" } }, (err, data) => {
-                if (err) {
-                    res.send(err).status(400)
-                }
-                else {
-                    res.send('Your account is activated please login').status(200)
-                }
-            })
-        }
+                user.findOne({ $and: [ {"id":params.id}, {"status":"ACTIVE"} ]}, (err,data)=>{
+                    if (err){
+                        res.send(err).status(400)
+                    }
+                    else if(data){
+                        res.send("Your account is already activated").status(200)
+
+                    }
+                    else{
+                user.updateOne({ "id": params.id }, { $set: { "status": "ACTIVE" } }, (err, data) => {
+                    if (err) {
+                        res.send(err).status(400)
+                    }
+                    else {
+                        res.send('Your account is activated please login').status(200)
+                    }
+                })
+            }
+                   
+        })
+     }
     })
 }
-
 exports.Login = (req, res) => {
 
     id = req.body.id
@@ -102,6 +114,7 @@ exports.Login = (req, res) => {
     })
 }
 
+//update user details
 exports.update = (req, res) => {
     user.update({ "id": req.body.id }, { $set: req.body }, (err, data) => {
         if (err) {

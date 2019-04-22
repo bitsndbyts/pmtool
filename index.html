@@ -68,14 +68,13 @@ a {
 </style>
 </head>
 <body>
-
-<form action="/action_page.php">
+<form  >
   <div class="container">
     <h1>Register</h1>
     <p>Please fill in this form to create an account.</p>
     <hr>
 
-<label for="name"><b>Name</b></label>
+<label for="name" id="m"><b>Name</b></label>
     <input type="text" placeholder="Enter Name" name="name" required>
 
 <label for="id"><b>ID</b></label>
@@ -104,7 +103,22 @@ a {
     <p>Already have an account? <a href="#">Sign in</a>.</p>
   </div>
 </form>
-
+<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
+  $(function test() {
+    var socket = io();
+    $('form').submit(function test(){
+      socket.emit('to server', $('#m').val());
+      $('#m').val('');
+      console.log("event emitted socket")
+      return false;
+    });
+    socket.on('to client', function(msg){
+      console.log("to client called")
+    });
+  });
+</script>
 </body>
 </html>
 

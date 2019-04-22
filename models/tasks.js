@@ -22,6 +22,10 @@ const TaskDetails = new mongoose.Schema({
     enddate: {
         type: Date,
         required: true
+    },
+    status :{
+        type: String,
+        default:"Incomplete"
     }
 })
 
